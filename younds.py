@@ -34,7 +34,7 @@ F_MONO  = ("Consolas", 11)
 F_LOGO  = ("Segoe UI", 22, "bold")
 
 
-# ── Reusable components ─────────────────────────────────────────────────────
+# ── Reusable components ──────────────────────────────────────────────────────
 
 class Card(ctk.CTkFrame):
     def __init__(self, master, **kw):
@@ -64,7 +64,7 @@ def small_entry(master, var, mono=False, placeholder="", **kw):
     )
 
 
-def browse_btn(master, text="Alege", cmd=None):
+def browse_btn(master, text="Browse", cmd=None):
     return ctk.CTkButton(
         master, text=text, font=F_XS, height=36, width=70,
         fg_color=SURF2, text_color=TEXT2, hover_color=BORDER2,
@@ -96,7 +96,7 @@ class Downloader:
                 self._on_log(f"  {raw}  ·  {spd}  ·  ETA {eta}")
             elif d["status"] == "finished":
                 self._on_converting()
-                self._on_log("  ✓ Descărcat, procesare…")
+                self._on_log("  ✓ Downloaded, processing…")
         return h
 
     def download(self, urls, output_dir, mode, quality, start_index,
@@ -175,6 +175,8 @@ class YoundsApp(ctk.CTk):
         )
         scroll.pack(fill="both", expand=True)
         self._scroll = scroll
+        self.bind_all("<Button-4>", lambda e: scroll._parent_canvas.yview_scroll(-1, "units"))
+        self.bind_all("<Button-5>", lambda e: scroll._parent_canvas.yview_scroll( 1, "units"))
 
         PAD = dict(padx=20, pady=(0, 10))
 
@@ -200,7 +202,7 @@ class YoundsApp(ctk.CTk):
         )
         self._url_box.pack(fill="x")
         self._url_placeholder = (
-            "Lipește linkuri aici — câte unul pe linie\n\n"
+            "Paste links here — one per line\n\n"
             "https://youtube.com/watch?v=...\n"
             "https://youtube.com/playlist?list=..."
         )
@@ -210,7 +212,7 @@ class YoundsApp(ctk.CTk):
 
         hint = ctk.CTkFrame(ui, fg_color="transparent")
         hint.pack(fill="x", pady=(8, 0))
-        for t in ["YouTube", "Facebook", "Playlist-uri", "Un link per linie"]:
+        for t in ["YouTube", "Facebook", "Playlists", "One link per line"]:
             label(hint, f"·  {t}").pack(side="left", padx=(0, 10))
 
         # Format
@@ -240,7 +242,7 @@ class YoundsApp(ctk.CTk):
 
         q_row = ctk.CTkFrame(fi, fg_color="transparent")
         q_row.pack(fill="x")
-        label(q_row, "Calitate", color=TEXT2).pack(side="left", padx=(0, 10))
+        label(q_row, "Quality", color=TEXT2).pack(side="left", padx=(0, 10))
         for q in ["128", "192", "256", "320"]:
             active = q == "320"
             btn = ctk.CTkButton(
@@ -261,7 +263,7 @@ class YoundsApp(ctk.CTk):
         adv_top.pack(fill="x", padx=20, pady=14)
 
         self._adv_btn = ctk.CTkButton(
-            adv_top, text="▶   Setări avansate", font=F_XS,
+            adv_top, text="▶   Advanced settings", font=F_XS,
             fg_color=SURF, text_color=TEXT3,
             hover_color=SURF, anchor="w",
             height=20, command=self._toggle_adv,
@@ -279,22 +281,22 @@ class YoundsApp(ctk.CTk):
         small_entry(ff_row, self._ffmpeg_var, mono=True).pack(side="left", fill="x", expand=True, padx=(0, 8))
         browse_btn(ff_row, cmd=self._pick_ffmpeg).pack(side="left")
 
-        label(ai, "Cookies (opțional)", color=TEXT2).pack(anchor="w", pady=(0, 5))
+        label(ai, "Cookies (optional)", color=TEXT2).pack(anchor="w", pady=(0, 5))
         ck_row = ctk.CTkFrame(ai, fg_color="transparent")
         ck_row.pack(fill="x", pady=(0, 12))
         self._cookies_var = ctk.StringVar(value="")
-        small_entry(ck_row, self._cookies_var, placeholder="Lasă gol dacă nu e nevoie").pack(
+        small_entry(ck_row, self._cookies_var, placeholder="Leave empty if not needed").pack(
             side="left", fill="x", expand=True, padx=(0, 8))
         browse_btn(ck_row, cmd=self._pick_cookies).pack(side="left")
 
-        label(ai, "Index numerotare", color=TEXT2).pack(anchor="w", pady=(0, 5))
+        label(ai, "Numbering start index", color=TEXT2).pack(anchor="w", pady=(0, 5))
         idx_row = ctk.CTkFrame(ai, fg_color="transparent")
         idx_row.pack(fill="x", pady=(0, 12))
         self._index_var = ctk.StringVar(value="0")
         small_entry(idx_row, self._index_var, width=80).pack(side="left")
-        label(idx_row, '  0 = fără număr  ·  12 → "12 - Titlu.mp3"…').pack(side="left")
+        label(idx_row, '  0 = no number  ·  12 → "12 - Title.mp3"…').pack(side="left")
 
-        label(ai, "Folder ieșire", color=TEXT2).pack(anchor="w", pady=(0, 5))
+        label(ai, "Output folder", color=TEXT2).pack(anchor="w", pady=(0, 5))
         out_row = ctk.CTkFrame(ai, fg_color="transparent")
         out_row.pack(fill="x")
         self._folder_var = ctk.StringVar(value=os.path.expanduser("~/Music/Younds"))
@@ -305,19 +307,19 @@ class YoundsApp(ctk.CTk):
         btn_f = ctk.CTkFrame(scroll, fg_color="transparent")
         btn_f.pack(fill="x", padx=20, pady=(0, 10))
         self._dl_btn = ctk.CTkButton(
-            btn_f, text="↓   Descarcă", font=("Segoe UI", 15, "bold"),
+            btn_f, text="↓   Download", font=("Segoe UI", 15, "bold"),
             height=52, corner_radius=12,
             fg_color=ACCENT, text_color=BG, hover_color=ACCENT2,
             command=self._start,
         )
         self._dl_btn.pack(fill="x")
 
-        # Progress card (always visible)
+        # Progress card
         self._prog_card = Card(scroll)
         self._prog_card.pack(fill="x", padx=20, pady=(0, 10))
         pi = self._prog_card.inner()
 
-        self._prog_title = ctk.CTkLabel(pi, text="Gata de descărcare.",
+        self._prog_title = ctk.CTkLabel(pi, text="Ready to download.",
                                         font=F_SM, text_color=TEXT3, anchor="w")
         self._prog_title.pack(fill="x", pady=(0, 10))
 
@@ -348,7 +350,7 @@ class YoundsApp(ctk.CTk):
             fg_color="transparent",
         )
         self._files_list.master.pack(fill="x", padx=20, pady=(14, 16))
-        label(self._files_list.master, "FIȘIERE DESCĂRCATE", font=F_XS_B).pack(anchor="w", pady=(0, 10))
+        label(self._files_list.master, "DOWNLOADED FILES", font=F_XS_B).pack(anchor="w", pady=(0, 10))
         self._files_list.pack(fill="x")
 
         # Log card (collapsible)
@@ -378,7 +380,7 @@ class YoundsApp(ctk.CTk):
         )
         self._log_box.pack(fill="x")
         ctk.CTkButton(
-            li, text="Șterge", width=68, height=22, corner_radius=6,
+            li, text="Clear", width=68, height=22, corner_radius=6,
             font=F_XS, fg_color=SURF2, hover_color=BORDER2, text_color=TEXT3,
             command=self._clear_log,
         ).pack(anchor="e", pady=(6, 0))
@@ -428,7 +430,7 @@ class YoundsApp(ctk.CTk):
     def _toggle_adv(self):
         self._adv_open = not self._adv_open
         arrow = "▼" if self._adv_open else "▶"
-        self._adv_btn.configure(text=f"{arrow}   Setări avansate")
+        self._adv_btn.configure(text=f"{arrow}   Advanced settings")
         if self._adv_open:
             self._adv_frame.pack(fill="x")
         else:
@@ -446,20 +448,20 @@ class YoundsApp(ctk.CTk):
     # ── File pickers ─────────────────────────────────────────────────────────
 
     def _pick_folder(self):
-        p = filedialog.askdirectory(title="Folder ieșire")
+        p = filedialog.askdirectory(title="Output folder")
         if p: self._folder_var.set(p)
 
     def _pick_ffmpeg(self):
         p = filedialog.askopenfilename(
-            title="FFmpeg",
-            filetypes=[("FFmpeg", "ffmpeg ffmpeg.exe"), ("Toate", "*")],
+            title="FFmpeg executable",
+            filetypes=[("FFmpeg", "ffmpeg ffmpeg.exe"), ("All files", "*")],
         )
         if p: self._ffmpeg_var.set(p)
 
     def _pick_cookies(self):
         p = filedialog.askopenfilename(
-            title="Cookies",
-            filetypes=[("Text", "*.txt"), ("Toate", "*")],
+            title="Cookies file",
+            filetypes=[("Text files", "*.txt"), ("All files", "*")],
         )
         if p: self._cookies_var.set(p)
 
@@ -495,7 +497,7 @@ class YoundsApp(ctk.CTk):
 
     def _on_converting(self):
         self.after(0, lambda: self._status_lbl.configure(
-            text="Conversie audio…", text_color=WARN))
+            text="Converting…", text_color=WARN))
 
     def _set_status(self, msg, color=TEXT2):
         self.after(0, lambda: self._status_lbl.configure(text=msg, text_color=color))
@@ -515,7 +517,7 @@ class YoundsApp(ctk.CTk):
 
         output_dir = self._folder_var.get().strip()
         if not output_dir:
-            messagebox.showwarning("Younds", "Alege un folder de ieșire.")
+            messagebox.showwarning("Younds", "Please select an output folder.")
             return
         try:
             start_idx = int(self._index_var.get().strip())
@@ -524,15 +526,15 @@ class YoundsApp(ctk.CTk):
 
         os.makedirs(output_dir, exist_ok=True)
         self._downloading = True
-        self._dl_btn.configure(state="disabled", text="Se descarcă…",
+        self._dl_btn.configure(state="disabled", text="Downloading…",
                                 fg_color=SURF2, text_color=TEXT2)
         self._prog_bar.set(0)
-        self._prog_title.configure(text="Se pregătește…", text_color=TEXT2)
+        self._prog_title.configure(text="Preparing…", text_color=TEXT2)
         self._pct_lbl.configure(text="")
         self._spd_lbl.configure(text="")
         self._eta_lbl.configure(text="")
-        self._status_lbl.configure(text="Descărcare în curs…", text_color=WARN)
-        self._log(f"▶  {len(urls)} link(uri)  →  {output_dir}")
+        self._status_lbl.configure(text="Downloading…", text_color=WARN)
+        self._log(f"▶  {len(urls)} link(s)  →  {output_dir}")
 
         dl = Downloader(self._on_progress, self._on_converting, self._log, self._on_done)
         threading.Thread(
@@ -549,16 +551,16 @@ class YoundsApp(ctk.CTk):
     def _on_done(self, success, files):
         def _f():
             self._downloading = False
-            self._dl_btn.configure(state="normal", text="↓   Descarcă",
+            self._dl_btn.configure(state="normal", text="↓   Download",
                                     fg_color=ACCENT, text_color=BG)
             if success:
                 self._prog_bar.set(1)
-                self._set_status(f"✓  Gata!  {len(files)} fișier(e) descărcat(e).", ACCENT)
-                self._log(f"✓  Gata! {len(files)} fișier(e).")
+                self._set_status(f"✓  Done!  {len(files)} file(s) downloaded.", ACCENT)
+                self._log(f"✓  Done! {len(files)} file(s).")
                 if files:
                     self._show_files(files)
             else:
-                self._set_status("⚠  Eroare sau oprit.", ERROR)
+                self._set_status("⚠  Error or cancelled.", ERROR)
         self.after(0, _f)
 
     def _show_files(self, files):
@@ -575,7 +577,7 @@ class YoundsApp(ctk.CTk):
                                           fill="x", expand=True)
             full = os.path.join(output_dir, fname)
             ctk.CTkButton(
-                row, text="Deschide", font=F_XS, height=28, width=80,
+                row, text="Open", font=F_XS, height=28, width=68,
                 fg_color=SURF2, text_color=ACCENT,
                 hover_color=BORDER2, corner_radius=6,
                 command=lambda p=full: self._open_file(p),

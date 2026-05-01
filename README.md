@@ -1,66 +1,84 @@
-# 🎵 Younds — Music & Video Downloader
+# Younds — Music & Video Downloader
 
-Aplicație desktop simplă și curată pentru descărcat muzică și videoclipuri.
-
----
-
-## ✅ Instalare
-
-### 1. Instalează dependențele Python
-
-```bash
-pip install -r requirements.txt
-```
-
-Sau manual:
-
-```bash
-pip install customtkinter yt-dlp
-```
-
-### 2. Instalează FFmpeg
-
-- Descarcă de la https://ffmpeg.org/download.html  
-- Extrage arhiva și pune calea completă spre `ffmpeg.exe` în câmpul din aplicație  
-- Exemplu: `C:\ffmpeg\bin\ffmpeg.exe`
+A clean, fast desktop and web app for downloading music and videos from YouTube, Facebook, and more.
 
 ---
 
-## ▶ Rulare
+## Installation
+
+### 1. Install Python dependencies
+
+```bash
+pip install customtkinter yt-dlp flask
+```
+
+### 2. Install FFmpeg
+
+**Linux**
+```bash
+sudo apt install ffmpeg
+```
+
+**macOS**
+```bash
+brew install ffmpeg
+```
+
+**Windows** — download from [ffmpeg.org](https://ffmpeg.org/download.html), extract and set the path in Advanced settings.
+
+---
+
+## Usage
+
+### Desktop app
 
 ```bash
 python younds.py
 ```
 
+### Web app
+
+```bash
+python app.py
+```
+
+Then open **http://localhost:5000** in your browser.
+
 ---
 
-## 🔧 Funcții
+## Features
 
-| Funcție | Detalii |
+| Feature | Details |
 |---|---|
-| 🎵 MP3 Audio | Extrage audio la calitate 128 / 192 / 256 / 320 kbps |
-| 🎬 MP4 Video | Descarcă video la cea mai bună calitate disponibilă |
-| 📋 Link-uri multiple | Pune câte un link pe linie — YouTube, Facebook, etc. |
-| 🔢 Numerotare | Index de start pentru a numerota fișierele (ex: 12 - Titlu.mp3) |
-| 🍪 Cookies | Suport pentru conținut privat sau geo-restricționat |
-| 📁 Folder custom | Alegi exact unde se salvează fișierele |
-| 📋 Log în timp real | Vezi progresul fiecărei descărcări |
+| MP3 Audio | Extracts audio at 128 / 192 / 256 / 320 kbps |
+| MP4 Video | Downloads video at best available quality |
+| Multiple links | One link per line — YouTube, Facebook, etc. |
+| Playlists | Paste a playlist URL directly — works automatically |
+| Numbering | Start index for numbering files (e.g. `12 - Title.mp3`) |
+| Cookies | Support for private or geo-restricted content |
+| Custom output folder | Choose exactly where files are saved |
+| Real-time progress | Live progress bar with speed and ETA |
+| Import .txt | Load a list of URLs from a plain text file (web app) |
+| Auto cleanup | Downloaded files are automatically deleted after 1 hour (web app) |
 
 ---
 
-## 💡 Sfaturi
+## Tips
 
-- **Facebook**: Dacă primești eroare la videoclipuri private, folosește un fișier `cookies.txt` exportat din browser
-- **Playlist**: Pune link-ul playlist-ului direct în căsuță — funcționează automat
-- **Index start**: Dacă ai deja 11 melodii și vrei să continui de la 12, pune `12` în câmpul index
+- **Playlists** — paste the full playlist URL, it downloads all tracks automatically
+- **Facebook** — for private videos, export a `cookies.txt` from your browser and load it in Advanced settings
+- **Numbering** — if you already have 11 songs and want to continue from 12, set the start index to `12`
+- **Cookies file format** — Netscape format `.txt`, exportable via browser extensions like "Get cookies.txt"
 
 ---
 
-## 📦 Structură
+## Project structure
 
 ```
 younds/
-├── younds.py        ← Aplicația principală
-├── requirements.txt ← Dependențe Python
+├── younds.py     ← Desktop app (customtkinter)
+├── app.py        ← Web app (Flask)
+├── templates/
+│   └── index.html
 └── README.md
 ```
