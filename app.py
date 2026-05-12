@@ -74,6 +74,7 @@ def start_download():
     urls = [u.strip() for u in data.get("urls", "").splitlines() if u.strip()]
     mode = data.get("mode", "audio")
     quality = data.get("quality", "320")
+    fmt = data.get("fmt", "mp3").lower()
     out_dir_req = data.get("out_dir", "").strip()
 
     if not urls:
@@ -112,10 +113,11 @@ def start_download():
         outtmpl = str(dl_dir / "%(title)s.%(ext)s")
 
         if mode == "audio":
+            codec = fmt if fmt in ("mp3", "flac", "m4a", "wav", "opus", "vorbis") else "mp3"
             opts = {
                 "format": "bestaudio/best",
                 "outtmpl": outtmpl,
-                "postprocessors": [{"key": "FFmpegExtractAudio", "preferredcodec": "mp3", "preferredquality": quality}],
+                "postprocessors": [{"key": "FFmpegExtractAudio", "preferredcodec": codec, "preferredquality": quality}],
                 "quiet": True,
                 "no_warnings": True,
                 "ignoreerrors": True,
